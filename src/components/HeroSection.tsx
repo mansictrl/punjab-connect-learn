@@ -44,11 +44,20 @@ const HeroSection = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="gradient-primary text-white hover:shadow-glow smooth-transition px-8">
+              <Button 
+                size="lg" 
+                className="gradient-primary text-white hover:shadow-glow smooth-transition px-8"
+                onClick={() => window.location.href = "/auth"}
+              >
                 <BookOpen className="h-5 w-5 mr-2" />
                 Start Learning
               </Button>
-              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10 px-8">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-primary text-primary hover:bg-primary/10 px-8"
+                onClick={() => window.location.href = "/auth"}
+              >
                 <Users className="h-5 w-5 mr-2" />
                 Teacher Dashboard
               </Button>

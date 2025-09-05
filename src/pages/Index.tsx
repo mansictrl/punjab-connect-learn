@@ -18,7 +18,7 @@ const Index = () => {
       category: "Digital Literacy",
       progress: 0,
       isOfflineAvailable: true,
-      onStart: () => console.log("Starting Digital Basics")
+      onStart: () => window.location.href = "/course/digital-basics"
     },
     {
       title: "Mathematics Grade 8",
@@ -31,7 +31,7 @@ const Index = () => {
       category: "Mathematics",
       progress: 35,
       isOfflineAvailable: true,
-      onStart: () => console.log("Starting Math Grade 8")
+      onStart: () => window.location.href = "/course/math-grade-8"
     },
     {
       title: "Science Experiments",
@@ -44,7 +44,7 @@ const Index = () => {
       category: "Science",
       progress: 0,
       isOfflineAvailable: false,
-      onStart: () => console.log("Starting Science Experiments")
+      onStart: () => window.location.href = "/course/science-experiments"
     },
     {
       title: "English Communication",
@@ -57,7 +57,7 @@ const Index = () => {
       category: "Language",
       progress: 60,
       isOfflineAvailable: true,
-      onStart: () => console.log("Starting English Communication")
+      onStart: () => window.location.href = "/course/english-communication"
     }
   ];
 
@@ -188,11 +188,21 @@ const Index = () => {
             the digital divide in rural Punjab
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="px-8">
+            <Button 
+              size="lg" 
+              variant="secondary" 
+              className="px-8"
+              onClick={() => window.location.href = "/auth"}
+            >
               <BookOpen className="h-5 w-5 mr-2" />
               Start as Student
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white/10 px-8"
+              onClick={() => window.location.href = "/auth"}
+            >
               <Users className="h-5 w-5 mr-2" />
               Teacher Registration
             </Button>
