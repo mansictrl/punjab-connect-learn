@@ -18,7 +18,7 @@ const Index = () => {
       category: "Digital Literacy",
       progress: 0,
       isOfflineAvailable: true,
-      onStart: () => window.location.href = "/course/digital-basics"
+      onStart: () => window.location.href = "/digital-literacy"
     },
     {
       title: "Mathematics Grade 8",
@@ -58,6 +58,19 @@ const Index = () => {
       progress: 60,
       isOfflineAvailable: true,
       onStart: () => window.location.href = "/course/english-communication"
+    },
+    {
+      title: "Typing Practice",
+      titleHindi: "टाइपिंग अभ्यास",
+      titlePunjabi: "ਟਾਈਪਿੰਗ ਅਭਿਆਸ",
+      description: "Master keyboard typing skills with interactive exercises and speed tests",
+      duration: "6 weeks",
+      students: 95,
+      difficulty: "Beginner" as const,
+      category: "Digital Skills",
+      progress: 0,
+      isOfflineAvailable: true,
+      onStart: () => window.location.href = "/typing-practice"
     }
   ];
 
