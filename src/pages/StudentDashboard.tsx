@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Clock, Trophy, Target, Calendar, ArrowRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BookOpen, Clock, Trophy, Target, Calendar, ArrowRight, BarChart3, Users, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const StudentDashboard = () => {
@@ -105,76 +106,157 @@ const StudentDashboard = () => {
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* My Courses */}
-          <div className="lg:col-span-2">
+        {/* Tabbed Interface */}
+        <Tabs defaultValue="courses" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="courses">My Courses</TabsTrigger>
+            <TabsTrigger value="progress">Progress</TabsTrigger>
+            <TabsTrigger value="achievements">Achievements</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="courses" className="space-y-6">
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <BookOpen className="h-5 w-5" />
+                      <span>My Courses</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {enrolledCourses.map((course) => (
+                      <div key={course.id} className="p-4 border border-border rounded-lg hover:shadow-card smooth-transition">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-semibold text-foreground">{course.title}</h3>
+                          <Badge variant="outline" className="text-xs">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {course.dueDate}
+                          </Badge>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm text-muted-foreground">Progress</span>
+                              <span className="text-sm font-medium">{course.progress}%</span>
+                            </div>
+                            <Progress value={course.progress} className="h-2" />
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Next lesson:</p>
+                              <p className="text-sm font-medium text-foreground">{course.nextLesson}</p>
+                            </div>
+                            <Button 
+                              size="sm" 
+                              onClick={() => navigate(`/course/${course.id}`)}
+                              className="gradient-primary text-white"
+                            >
+                              Continue
+                              <ArrowRight className="h-4 w-4 ml-1" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quick Actions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start"
+                      onClick={() => navigate("/")}
+                    >
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Browse All Courses
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start"
+                      onClick={() => navigate("/digital-literacy")}
+                    >
+                      <Target className="h-4 w-4 mr-2" />
+                      Digital Literacy Quiz
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start"
+                      onClick={() => navigate("/typing-practice")}
+                    >
+                      <Target className="h-4 w-4 mr-2" />
+                      Typing Practice
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="progress" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <BookOpen className="h-5 w-5" />
-                  <span>My Courses</span>
+                  <BarChart3 className="h-5 w-5" />
+                  <span>Learning Progress</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {enrolledCourses.map((course) => (
-                  <div key={course.id} className="p-4 border border-border rounded-lg hover:shadow-card smooth-transition">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-foreground">{course.title}</h3>
-                      <Badge variant="outline" className="text-xs">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {course.dueDate}
-                      </Badge>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary">65%</div>
+                      <p className="text-sm text-muted-foreground">Overall Progress</p>
                     </div>
-                    
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm text-muted-foreground">Progress</span>
-                          <span className="text-sm font-medium">{course.progress}%</span>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-success">12</div>
+                      <p className="text-sm text-muted-foreground">Completed Lessons</p>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3">Course Progress</h4>
+                    {enrolledCourses.map((course) => (
+                      <div key={course.id} className="mb-4">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">{course.title}</span>
+                          <span className="text-sm">{course.progress}%</span>
                         </div>
                         <Progress value={course.progress} className="h-2" />
                       </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Next lesson:</p>
-                          <p className="text-sm font-medium text-foreground">{course.nextLesson}</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          onClick={() => navigate(`/course/${course.id}`)}
-                          className="gradient-primary text-white"
-                        >
-                          Continue
-                          <ArrowRight className="h-4 w-4 ml-1" />
-                        </Button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </CardContent>
             </Card>
-          </div>
+          </TabsContent>
 
-          {/* Recent Achievements */}
-          <div>
+          <TabsContent value="achievements" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Trophy className="h-5 w-5" />
-                  <span>Recent Achievements</span>
+                  <span>Achievements & Badges</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {recentAchievements.map((achievement, index) => (
-                  <div key={index} className="p-3 bg-card border border-border rounded-lg">
+                  <div key={index} className="p-4 bg-card border border-border rounded-lg">
                     <div className="flex items-start space-x-3">
-                      <div className="p-1 bg-warning/10 rounded-full">
-                        <Trophy className="h-4 w-4 text-warning" />
+                      <div className="p-2 bg-warning/10 rounded-full">
+                        <Trophy className="h-5 w-5 text-warning" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-medium text-foreground text-sm">{achievement.title}</h4>
-                        <p className="text-xs text-muted-foreground mb-1">{achievement.description}</p>
+                        <h4 className="font-medium text-foreground">{achievement.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-1">{achievement.description}</p>
                         <p className="text-xs text-muted-foreground">{achievement.date}</p>
                       </div>
                     </div>
@@ -182,33 +264,41 @@ const StudentDashboard = () => {
                 ))}
               </CardContent>
             </Card>
+          </TabsContent>
 
-            {/* Quick Actions */}
-            <Card className="mt-6">
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <Settings className="h-5 w-5" />
+                  <span>Account Settings</span>
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={() => navigate("/")}
-                >
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  Browse All Courses
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={() => navigate("/profile")}
-                >
-                  <Target className="h-4 w-4 mr-2" />
-                  View Progress Reports
-                </Button>
+              <CardContent className="space-y-4">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium mb-2">Profile Information</h4>
+                    <Button variant="outline" className="w-full justify-start">
+                      Edit Profile
+                    </Button>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Language Preference</h4>
+                    <Button variant="outline" className="w-full justify-start">
+                      Change Language
+                    </Button>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Notifications</h4>
+                    <Button variant="outline" className="w-full justify-start">
+                      Notification Settings
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

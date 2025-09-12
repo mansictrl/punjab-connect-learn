@@ -5,6 +5,11 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Home, CheckCircle, XCircle, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import printerImg from "@/assets/printer.jpg";
+import keyboardImg from "@/assets/keyboard.jpg";
+import mouseImg from "@/assets/mouse.jpg";
+import monitorImg from "@/assets/monitor.jpg";
+import cameraImg from "@/assets/camera.jpg";
 
 interface Question {
   id: number;
@@ -28,14 +33,14 @@ const DigitalLiteracy = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
   const [language, setLanguage] = useState<'english' | 'hindi' | 'punjabi'>('english');
 
-  // Sample questions with base64 placeholder images (in real app, use actual device images)
+  // Digital literacy questions with real device images
   const questions: Question[] = [
     {
       id: 1,
       question: "Which device is shown in the image?",
       questionHindi: "छवि में कौन सा उपकरण दिखाया गया है?",
       questionPunjabi: "ਤਸਵੀਰ ਵਿੱਚ ਕਿਹੜਾ ਯੰਤਰ ਦਿਖਾਇਆ ਗਿਆ ਹੈ?",
-      image: "🖨️", // In real app, use actual image URLs
+      image: printerImg,
       options: ["Mouse", "Printer", "Keyboard", "Monitor"],
       optionsHindi: ["माउस", "प्रिंटर", "कीबोर्ड", "मॉनिटर"],
       optionsPunjabi: ["ਮਾਊਸ", "ਪ੍ਰਿੰਟਰ", "ਕੀਬੋਰਡ", "ਮਾਨੀਟਰ"],
@@ -47,7 +52,7 @@ const DigitalLiteracy = () => {
       question: "What is this input device called?",
       questionHindi: "इस इनपुट डिवाइस को क्या कहते हैं?",
       questionPunjabi: "ਇਸ ਇਨਪੁਟ ਡਿਵਾਈਸ ਨੂੰ ਕੀ ਕਿਹਾ ਜਾਂਦਾ ਹੈ?",
-      image: "⌨️",
+      image: keyboardImg,
       options: ["Speaker", "Microphone", "Keyboard", "Camera"],
       optionsHindi: ["स्पीकर", "माइक्रोफोन", "कीबोर्ड", "कैमरा"],
       optionsPunjabi: ["ਸਪੀਕਰ", "ਮਾਈਕ੍ਰੋਫੋਨ", "ਕੀਬੋਰਡ", "ਕੈਮਰਾ"],
@@ -59,7 +64,7 @@ const DigitalLiteracy = () => {
       question: "Which device is used for pointing and clicking?",
       questionHindi: "पॉइंटिंग और क्लिकिंग के लिए कौन सा उपकरण उपयोग किया जाता है?",
       questionPunjabi: "ਪੁਆਇੰਟਿੰਗ ਅਤੇ ਕਲਿਕਿੰਗ ਲਈ ਕਿਹੜਾ ਯੰਤਰ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ?",
-      image: "🖱️",
+      image: mouseImg,
       options: ["Keyboard", "Monitor", "Mouse", "Printer"],
       optionsHindi: ["कीबोर्ड", "मॉनिटर", "माउस", "प्रिंटर"],
       optionsPunjabi: ["ਕੀਬੋਰਡ", "ਮਾਨੀਟਰ", "ਮਾਊਸ", "ਪ੍ਰਿੰਟਰ"],
@@ -71,7 +76,7 @@ const DigitalLiteracy = () => {
       question: "What do we call the main screen of a computer?",
       questionHindi: "कंप्यूटर की मुख्य स्क्रीन को क्या कहते हैं?",
       questionPunjabi: "ਕੰਪਿਊਟਰ ਦੀ ਮੁੱਖ ਸਕਰੀਨ ਨੂੰ ਕੀ ਕਿਹਾ ਜਾਂਦਾ ਹੈ?",
-      image: "🖥️",
+      image: monitorImg,
       options: ["CPU", "Monitor", "Speaker", "Webcam"],
       optionsHindi: ["सीपीयू", "मॉनिटर", "स्पीकर", "वेबकैम"],
       optionsPunjabi: ["ਸੀਪੀਯੂ", "ਮਾਨੀਟਰ", "ਸਪੀਕਰ", "ਵੈਬਕੈਮ"],
@@ -83,7 +88,7 @@ const DigitalLiteracy = () => {
       question: "Which device captures photos and videos?",
       questionHindi: "कौन सा उपकरण फोटो और वीडियो कैप्चर करता है?",
       questionPunjabi: "ਕਿਹੜਾ ਯੰਤਰ ਫੋਟੋ ਅਤੇ ਵੀਡੀਓ ਕੈਪਚਰ ਕਰਦਾ ਹੈ?",
-      image: "📷",
+      image: cameraImg,
       options: ["Microphone", "Camera", "Speaker", "Headphones"],
       optionsHindi: ["माइक्रोफोन", "कैमरा", "स्पीकर", "हेडफोन"],
       optionsPunjabi: ["ਮਾਈਕ੍ਰੋਫੋਨ", "ਕੈਮਰਾ", "ਸਪੀਕਰ", "ਹੈਡਫੋਨ"],
@@ -275,8 +280,12 @@ const DigitalLiteracy = () => {
           <CardContent className="space-y-6">
             {/* Device Image */}
             <div className="text-center">
-              <div className="w-32 h-32 mx-auto bg-muted/30 rounded-lg border-2 border-border flex items-center justify-center text-6xl">
-                {currentQuestion.image}
+              <div className="w-48 h-48 mx-auto bg-muted/30 rounded-lg border-2 border-border overflow-hidden">
+                <img 
+                  src={currentQuestion.image} 
+                  alt="Device for identification"
+                  className="w-full h-full object-contain p-4"
+                />
               </div>
             </div>
 
