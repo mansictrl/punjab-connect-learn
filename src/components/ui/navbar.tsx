@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { BookOpen, Menu, Globe, Wifi, WifiOff } from "lucide-react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [language, setLanguage] = useState("en");
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <nav className="w-full bg-card/95 backdrop-blur-sm border-b border-border shadow-soft sticky top-0 z-50">
@@ -35,6 +39,52 @@ const Navbar = () => {
 
         {/* Right Side Controls */}
         <div className="flex items-center space-x-3">
+          {/* Authentication Section */}
+          {user ? (
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-muted-foreground hidden sm:inline">
+                {profile?.full_name || user.email}
+              </span>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => {
+                  switch (profile?.role) {
+                    case 'student':
+                      navigate('/student-dashboard');
+                      break;
+                    case 'teacher':
+                      navigate('/teacher-dashboard');
+                      break;
+                    case 'parent':
+                      navigate('/parent-dashboard');
+                      break;
+                    case 'school_admin':
+                      navigate('/school-dashboard');
+                      break;
+                    case 'punjab_dept':
+                      navigate('/punjab-dashboard');
+                      break;
+                    default:
+                      navigate('/student-dashboard');
+                  }
+                }}
+                className="text-xs"
+              >
+                Dashboard
+              </Button>
+              <Button variant="ghost" size="sm" onClick={signOut} className="text-xs">
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/auth">Login</Link>
+              </Button>
+            </div>
+          )}
+
           {/* Online/Offline Indicator */}
           <div className="flex items-center space-x-1 text-xs">
             {isOnline ? (

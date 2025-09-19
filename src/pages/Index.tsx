@@ -4,8 +4,39 @@ import LearningCard from "@/components/LearningCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Users, BarChart3, Download, Globe, Smartphone, Award } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (user && profile) {
+      // Navigate to appropriate dashboard based on user role
+      switch (profile.role) {
+        case 'student':
+          navigate('/student-dashboard');
+          break;
+        case 'teacher':
+          navigate('/teacher-dashboard');
+          break;
+        case 'parent':
+          navigate('/parent-dashboard');
+          break;
+        case 'school_admin':
+          navigate('/school-dashboard');
+          break;
+        case 'punjab_dept':
+          navigate('/punjab-dashboard');
+          break;
+        default:
+          navigate('/student-dashboard');
+      }
+    } else {
+      navigate('/auth');
+    }
+  };
   const courses = [
     {
       title: "Digital Basics",

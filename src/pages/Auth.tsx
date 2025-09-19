@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,55 +6,76 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Users, GraduationCap, Building, Shield, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Auth = () => {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
-  const [signupForm, setSignupForm] = useState({ 
-    name: "", 
+  const [signupForm, setSignupForm] = useState<{
+    full_name: string;
+    email: string;
+    password: string;
+    role: 'student' | 'teacher' | 'parent' | 'school_admin' | 'punjab_dept';
+    school_name: string;
+    district: string;
+    class_grade: string;
+    subject: string;
+    organization: string;
+  }>({ 
+    full_name: "", 
     email: "", 
     password: "", 
     role: "student",
-    organization: "",
-    schoolCode: ""
+    school_name: "",
+    district: "",
+    class_grade: "",
+    subject: "",
+    organization: ""
   });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { user, signIn, signUp, getDashboardPath } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement actual authentication with Supabase
-    console.log("Login:", loginForm);
-    
-    // Mock login - redirect based on mock user role
-    if (loginForm.email.includes("teacher")) {
-      navigate("/teacher-dashboard");
-    } else if (loginForm.email.includes("parent")) {
-      navigate("/parent-dashboard");
-    } else if (loginForm.email.includes("school")) {
-      navigate("/school-dashboard");  
-    } else if (loginForm.email.includes("punjab") || loginForm.email.includes("dept")) {
-      navigate("/punjab-dashboard");
-    } else {
-      navigate("/student-dashboard");
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate(getDashboardPath());
     }
+  }, [user, navigate, getDashboardPath]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const { error } = await signIn(loginForm.email, loginForm.password);
+    
+    if (!error) {
+      // Navigation will be handled by the auth state change
+    }
+    
+    setIsLoading(false);
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual authentication with Supabase
-    console.log("Signup:", signupForm);
+    setIsLoading(true);
     
-    // Mock signup - redirect based on selected role
-    if (signupForm.role === "teacher") {
-      navigate("/teacher-dashboard");
-    } else if (signupForm.role === "parent") {
-      navigate("/parent-dashboard");
-    } else if (signupForm.role === "school") {
-      navigate("/school-dashboard");
-    } else if (signupForm.role === "punjab-dept") {
-      navigate("/punjab-dashboard");
-    } else {
-      navigate("/student-dashboard");
+    const { error } = await signUp({
+      email: signupForm.email,
+      password: signupForm.password,
+      full_name: signupForm.full_name,
+      role: signupForm.role,
+      school_name: signupForm.school_name,
+      district: signupForm.district,
+      class_grade: signupForm.class_grade,
+      subject: signupForm.subject,
+      organization: signupForm.organization,
+    });
+    
+    if (!error) {
+      // Navigation will be handled by the auth state change
     }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -110,8 +131,8 @@ const Auth = () => {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full gradient-primary text-white">
-                    Login
+                  <Button type="submit" className="w-full gradient-primary text-white" disabled={isLoading}>
+                    {isLoading ? "Logging in..." : "Login"}
                   </Button>
                 </form>
 
@@ -190,13 +211,13 @@ const Auth = () => {
               <CardContent>
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="full_name">Full Name</Label>
                     <Input
-                      id="name"
+                      id="full_name"
                       type="text"
                       placeholder="Enter your full name"
-                      value={signupForm.name}
-                      onChange={(e) => setSignupForm({ ...signupForm, name: e.target.value })}
+                      value={signupForm.full_name}
+                      onChange={(e) => setSignupForm({ ...signupForm, full_name: e.target.value })}
                       required
                     />
                   </div>
@@ -257,8 +278,8 @@ const Auth = () => {
                       </Button>
                       <Button
                         type="button"
-                        variant={signupForm.role === "school" ? "default" : "outline"}
-                        onClick={() => setSignupForm({ ...signupForm, role: "school" })}
+                        variant={signupForm.role === "school_admin" ? "default" : "outline"}
+                        onClick={() => setSignupForm({ ...signupForm, role: "school_admin" })}
                         className="h-11 text-xs"
                       >
                         <Building className="h-3 w-3 mr-1" />
@@ -268,8 +289,8 @@ const Auth = () => {
                     <div className="grid grid-cols-1 gap-2">
                       <Button
                         type="button"
-                        variant={signupForm.role === "punjab-dept" ? "default" : "outline"}
-                        onClick={() => setSignupForm({ ...signupForm, role: "punjab-dept" })}
+                        variant={signupForm.role === "punjab_dept" ? "default" : "outline"}
+                        onClick={() => setSignupForm({ ...signupForm, role: "punjab_dept" })}
                         className="h-11 text-xs"
                       >
                         <Shield className="h-3 w-3 mr-1" />
@@ -279,20 +300,46 @@ const Auth = () => {
                   </div>
 
                   {/* Additional Fields for Specific Roles */}
-                  {(signupForm.role === "school" || signupForm.role === "teacher") && (
+                  {(signupForm.role === "school_admin" || signupForm.role === "teacher" || signupForm.role === "student") && (
                     <div className="space-y-2">
-                      <Label htmlFor="school-code">School Code</Label>
+                      <Label htmlFor="school_name">School Name</Label>
                       <Input
-                        id="school-code"
+                        id="school_name"
                         type="text"
-                        placeholder="Enter your school code"
-                        value={signupForm.schoolCode}
-                        onChange={(e) => setSignupForm({ ...signupForm, schoolCode: e.target.value })}
+                        placeholder="Enter your school name"
+                        value={signupForm.school_name}
+                        onChange={(e) => setSignupForm({ ...signupForm, school_name: e.target.value })}
                       />
                     </div>
                   )}
 
-                  {signupForm.role === "punjab-dept" && (
+                  {signupForm.role === "student" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="class_grade">Class/Grade</Label>
+                      <Input
+                        id="class_grade"
+                        type="text"
+                        placeholder="e.g., 10th Grade"
+                        value={signupForm.class_grade}
+                        onChange={(e) => setSignupForm({ ...signupForm, class_grade: e.target.value })}
+                      />
+                    </div>
+                  )}
+
+                  {signupForm.role === "teacher" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="subject">Subject</Label>
+                      <Input
+                        id="subject"
+                        type="text"
+                        placeholder="e.g., Mathematics, Science"
+                        value={signupForm.subject}
+                        onChange={(e) => setSignupForm({ ...signupForm, subject: e.target.value })}
+                      />
+                    </div>
+                  )}
+
+                  {signupForm.role === "punjab_dept" && (
                     <div className="space-y-2">
                       <Label htmlFor="organization">Department/Organization</Label>
                       <Input
@@ -305,8 +352,8 @@ const Auth = () => {
                     </div>
                   )}
 
-                  <Button type="submit" className="w-full gradient-primary text-white">
-                    Create Account
+                  <Button type="submit" className="w-full gradient-primary text-white" disabled={isLoading}>
+                    {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
                 </form>
               </CardContent>

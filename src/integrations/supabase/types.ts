@@ -14,16 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          class_grade: string | null
+          created_at: string
+          district: string | null
+          email: string
+          full_name: string
+          id: string
+          organization: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          school_name: string | null
+          subject: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          class_grade?: string | null
+          created_at?: string
+          district?: string | null
+          email: string
+          full_name: string
+          id?: string
+          organization?: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          school_name?: string | null
+          subject?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          class_grade?: string | null
+          created_at?: string
+          district?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          organization?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          school_name?: string | null
+          subject?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["user_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role:
+        | "student"
+        | "teacher"
+        | "parent"
+        | "school_admin"
+        | "punjab_dept"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +205,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: [
+        "student",
+        "teacher",
+        "parent",
+        "school_admin",
+        "punjab_dept",
+      ],
+    },
   },
 } as const
